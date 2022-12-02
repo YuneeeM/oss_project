@@ -32,7 +32,7 @@ class Main(QDialog):  # 메인 클래스
         layout_equation_solution.addWidget(self.equation)
 
         'temp'
-        # 계산기능에 사용할 변수 -issue7
+        # issue7 계산기능에 사용할 변수
         self.temp_number = 0
         self.temp_operator = ""
 
@@ -44,7 +44,7 @@ class Main(QDialog):  # 메인 클래스
         button_division = QPushButton("/")
         button_equal = QPushButton("=")
 
-        # 새 버튼들 -issue6
+        # issue6 새 버튼들
         button_remainder = QPushButton("%")  # 나머지
         button_clear1 = QPushButton("CE")  # 삭제기능1
         button_clear2 = QPushButton("C")  # 삭제기능2
@@ -98,6 +98,7 @@ class Main(QDialog):  # 메인 클래스
             lambda state, operation="root": self.button_operation_clicked(operation))
         button_plusminus.clicked.connect(
             lambda state, operation="plusminus": self.button_operation_clicked(operation))
+
         # 숫자 버튼 생성하고, layout_number 레이아웃에 추가
         # 각 숫자 버튼을 클릭했을 때, 숫자가 수식창에 입력 될 수 있도록 시그널 설정
         number_button_dict = {}
@@ -202,7 +203,7 @@ class Main(QDialog):  # 메인 클래스
 
         self.equation.setText(str(temp_result))
 
-    'issue 8 c와 ce 기능 구현'
+    # issue8 c와 ce 기능 구현
 
     def button_clear1_clicked(self):
         self.equation.setText(" ")
