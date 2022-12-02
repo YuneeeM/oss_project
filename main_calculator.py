@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import *
                 issue 7 - 기존 계산 기능 개선
                     (eval을 사용하지 않고 math나 numpy라이브러리 사용)
                 issue 8 - 신규 계산 기능 추가
-                    (%, 역수 등등)
+                    (%, 역수, 제곱, 제곱근 등등)
 '''
 
 
