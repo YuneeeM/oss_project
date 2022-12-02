@@ -18,7 +18,7 @@ class Main(QDialog):  # 메인 클래스
         self.init_ui()  # init_ui 메소드에서 모든 작업이 이뤄짐
 
     def init_ui(self):
-        # layout
+        'layout'
         main_layout = QGridLayout()  # main_layout 전체를 통합하는 Gridlayout를 생성함
         layout_equation_solution = QGridLayout()  # 입력창
         layout_clear_equal = QGridLayout()  # 지우고 삭제하는 버튼의 Gridlayout
@@ -32,6 +32,7 @@ class Main(QDialog):  # 메인 클래스
         self.equation = QLineEdit("")
         layout_equation_solution.addWidget(self.equation)
 
+        'button'
         # 사칙연산 버튼 생성
         button_plus = QPushButton("+")
         button_minus = QPushButton("-")
