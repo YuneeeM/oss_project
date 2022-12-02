@@ -49,16 +49,6 @@ class Main(QDialog):  # 메인 클래스
         button_dot = QPushButton(".")  # 부동소수점
         button_plusminus = QPushButton("+/-")  # 플/마
 
-        # 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
-        button_plus.clicked.connect(
-            lambda state, operation="+": self.button_operation_clicked(operation))
-        button_minus.clicked.connect(
-            lambda state, operation="-": self.button_operation_clicked(operation))
-        button_product.clicked.connect(
-            lambda state, operation="*": self.button_operation_clicked(operation))
-        button_division.clicked.connect(
-            lambda state, operation="/": self.button_operation_clicked(operation))
-
         # 위젯 추가
         layout_clear_equal.addWidget(button_remainder, 0, 0)
         layout_clear_equal.addWidget(button_clear1, 0, 1)
