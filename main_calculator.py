@@ -12,96 +12,91 @@ from PyQt5.QtWidgets import *
 '''
 
 
-def init_ui(self):
-    # layout
-    main_layout = QGridLayout()  # main_layout 전체를 통합하는 Gridlayout를 생성함
-    layout_equation_solution = QGridLayout()  # 입력창
-    layout_clear_equal = QGridLayout()  # 지우고 삭제하는 버튼의 Gridlayout
-    layout_operation1 = QGridLayout()  # 기본 사칙연산
-    layout_operation2 = QGridLayout()  # 추가 사칙연산
-    layout_number = QGridLayout()  # 숫자
-    layout_left = QGridLayout()  # 왼쪽 그리드 합치기
-    layout_bottom = QGridLayout()  # 아래쪽 그리드 합치기
+class Main(QDialog):  # 메인 클래스
+    def __init__(self):
+        super().__init__()
+        self.init_ui()  # init_ui 메소드에서 모든 작업이 이뤄짐
 
-    # 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
-    label_equation = QLabel("Equation: ")
-    label_solution = QLabel("Solution: ")
-    self.equation = QLineEdit("")
-    self.solution = QLineEdit("")
+    def init_ui(self):
+        'layout'
+        main_layout = QGridLayout()  # main_layout 전체를 통합하는 Gridlayout를 생성함
+        layout_equation_solution = QGridLayout()  # 입력창
+        layout_clear_equal = QGridLayout()  # 지우고 삭제하는 버튼의 Gridlayout
+        layout_operation1 = QGridLayout()  # 기본 사칙연산
+        layout_operation2 = QGridLayout()  # 추가 사칙연산
+        layout_number = QGridLayout()  # 숫자
+        layout_left = QGridLayout()  # 왼쪽 그리드 합치기
+        layout_bottom = QGridLayout()  # 아래쪽 그리드 합치기
 
-    # layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
-    layout_equation_solution.addWidget(label_equation, self.equation)
-    layout_equation_solution.addWidget(label_solution, self.solution)
+        # 수식 입력과 답 출력을 위한 LineEdit 위젯 생성 -issue 5
+        self.equation = QLineEdit("")
+        layout_equation_solution.addWidget(self.equation)
 
-    # 사칙연산 버튼 생성
-    button_plus = QPushButton("+")
-    button_minus = QPushButton("-")
-    button_product = QPushButton("x")
-    button_division = QPushButton("/")
+        # 사칙연산 버튼 생성
+        button_plus = QPushButton("+")
+        button_minus = QPushButton("-")
+        button_product = QPushButton("x")
+        button_division = QPushButton("/")
 
-    # 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
-    button_plus.clicked.connect(
-        lambda state, operation="+": self.button_operation_clicked(operation))
-    button_minus.clicked.connect(
-        lambda state, operation="-": self.button_operation_clicked(operation))
-    button_product.clicked.connect(
-        lambda state, operation="*": self.button_operation_clicked(operation))
-    button_division.clicked.connect(
-        lambda state, operation="/": self.button_operation_clicked(operation))
+        # 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
+        button_plus.clicked.connect(
+            lambda state, operation="+": self.button_operation_clicked(operation))
+        button_minus.clicked.connect(
+            lambda state, operation="-": self.button_operation_clicked(operation))
+        button_product.clicked.connect(
+            lambda state, operation="*": self.button_operation_clicked(operation))
+        button_division.clicked.connect(
+            lambda state, operation="/": self.button_operation_clicked(operation))
 
-    # 사칙연산 버튼을 layout_operation 레이아웃에 추가
-    layout_operation1.addWidget(button_plus)
-    layout_operation1.addWidget(button_minus)
-    layout_operation1.addWidget(button_product)
-    layout_operation1.addWidget(button_division)
+        # =, clear, backspace 버튼 생성
+        button_equal = QPushButton("=")
+        button_clear = QPushButton("Clear")
+        button_backspace = QPushButton("Backspace")
 
-    # =, clear, backspace 버튼 생성
-    button_equal = QPushButton("=")
-    button_clear = QPushButton("Clear")
-    button_backspace = QPushButton("Backspace")
+        # =, clear, backspace 버튼을 layout_clear_equal 레이아웃에 추가
+        layout_clear_equal.addWidget(button_clear)
+        layout_clear_equal.addWidget(button_backspace)
+        layout_clear_equal.addWidget(button_equal)
 
-    # =, clear, backspace 버튼 클릭 시 시그널 설정
-    button_equal.clicked.connect(self.button_equal_clicked)
-    button_clear.clicked.connect(self.button_clear_clicked)
-    button_backspace.clicked.connect(self.button_backspace_clicked)
+        layout_operation1.addWidget(button_backspace, 0, 0)
+        layout_operation1.addWidget(button_division, 1, 0)
+        layout_operation1.addWidget(button_product, 2, 0)
+        layout_operation1.addWidget(button_minus, 3, 0)
+        layout_operation1.addWidget(button_plus, 4, 0)
+        layout_operation1.addWidget(button_equal, 5, 0)
 
-    # =, clear, backspace 버튼을 layout_clear_equal 레이아웃에 추가
-    layout_clear_equal.addWidget(button_clear)
-    layout_clear_equal.addWidget(button_backspace)
-    layout_clear_equal.addWidget(button_equal)
+        # 숫자 버튼 생성하고, layout_number 레이아웃에 추가
+        # 각 숫자 버튼을 클릭했을 때, 숫자가 수식창에 입력 될 수 있도록 시그널 설정
+        number_button_dict = {}
+        for number in range(0, 10):
+            number_button_dict[number] = QPushButton(str(number))
+            number_button_dict[number].clicked.connect(lambda state, num=number:
+                                                       self.number_button_clicked(num))
+            if number > 0:
+                x, y = divmod(number-1, 3)
+                layout_number.addWidget(number_button_dict[number], x, y)
+            elif number == 0:
+                layout_number.addWidget(number_button_dict[number], 3, 1)
 
-    # 숫자 버튼 생성하고, layout_number 레이아웃에 추가
-    # 각 숫자 버튼을 클릭했을 때, 숫자가 수식창에 입력 될 수 있도록 시그널 설정
-    number_button_dict = {}
-    for number in range(0, 10):
-        number_button_dict[number] = QPushButton(str(number))
-        number_button_dict[number].clicked.connect(lambda state, num=number:
-                                                   self.number_button_clicked(num))
-        if number > 0:
-            x, y = divmod(number-1, 3)
-            layout_number.addWidget(number_button_dict[number], x, y)
-        elif number == 0:
-            layout_number.addWidget(number_button_dict[number], 3, 1)
+        # 소숫점 버튼과 00 버튼을 입력하고 시그널 설정
+        button_dot = QPushButton(".")
+        button_dot.clicked.connect(
+            lambda state, num=".": self.number_button_clicked(num))
+        layout_number.addWidget(button_dot, 3, 2)
 
-    # 소숫점 버튼과 00 버튼을 입력하고 시그널 설정
-    button_dot = QPushButton(".")
-    button_dot.clicked.connect(
-        lambda state, num=".": self.number_button_clicked(num))
-    layout_number.addWidget(button_dot, 3, 2)
+        button_double_zero = QPushButton("00")
+        button_double_zero.clicked.connect(
+            lambda state, num="00": self.number_button_clicked(num))
+        layout_number.addWidget(button_double_zero, 3, 0)
 
-    button_double_zero = QPushButton("00")
-    button_double_zero.clicked.connect(
-        lambda state, num="00": self.number_button_clicked(num))
-    layout_number.addWidget(button_double_zero, 3, 0)
+        # 각 레이아웃을 main_layout 레이아웃에 추가
+        main_layout.addLayout(layout_equation_solution, 0, 0)
+        main_layout.addLayout(layout_operation1, 0, 1)
+        main_layout.addLayout(layout_clear_equal, 1, 0)
+        main_layout.addLayout(layout_number, 2, 0)
 
-    # 각 레이아웃을 main_layout 레이아웃에 추가
-    main_layout.addLayout(layout_equation_solution)
-    main_layout.addLayout(layout_operation1)
-    main_layout.addLayout(layout_clear_equal)
-    main_layout.addLayout(layout_number)
-
-    self.setLayout(main_layout)
-    self.show()
+        self.setLayout(main_layout)
+        self.show()
 
 #################
 ### functions ###
