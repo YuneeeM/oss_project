@@ -32,6 +32,13 @@ class Main(QDialog):  # 메인 클래스
         self.equation = QLineEdit("")
         layout_equation_solution.addWidget(self.equation)
 
+        'style- self.equation'
+        self.equation.setStyleSheet(
+            "border-style: solid;"
+            "border-width: 2px;"
+            "border-color: gray;"
+            "border-radius: 5px")
+
         'button'
         # 사칙연산 버튼 생성
         button_plus = QPushButton("+")
@@ -40,12 +47,18 @@ class Main(QDialog):  # 메인 클래스
         button_division = QPushButton("/")
         button_equal = QPushButton("=")
 
+        'style - button'
+        button_equal.setStyleSheet("background-color:#B0C4DE; ")
+        button_plus.setStyleSheet("background-color:#ADD8E6; ")
+        button_minus.setStyleSheet("background-color:#ADD8E6;")
+        button_product.setStyleSheet("background-color: #ADD8E6;")
+        button_division.setStyleSheet("background-color: #ADD8E6;")
+
         # 새 버튼들 - issue6
         button_remainder = QPushButton("%")  # 나머지
         button_clear1 = QPushButton("CE")  # 삭제기능1
         button_clear2 = QPushButton("C")  # 삭제기능2
         button_backspace = QPushButton("<=")  # 되돌리기
-
         button_reciprocal = QPushButton("1/x")  # 역수
         button_square = QPushButton("x^2")  # 제곱
         button_root = QPushButton("x^1/2")  # 제곱근
@@ -90,16 +103,6 @@ class Main(QDialog):  # 메인 클래스
         button_plusminus.clicked.connect(
             lambda state, operation="plusminus": self.button_operation_clicked(operation))
 
-        # =, clear, backspace 버튼 생성
-        button_equal = QPushButton("=")
-        button_clear = QPushButton("Clear")
-        button_backspace = QPushButton("Backspace")
-
-        # =, clear, backspace 버튼을 layout_clear_equal 레이아웃에 추가
-        layout_clear_equal.addWidget(button_clear)
-        layout_clear_equal.addWidget(button_backspace)
-        layout_clear_equal.addWidget(button_equal)
-
         layout_operation1.addWidget(button_backspace, 0, 0)
         layout_operation1.addWidget(button_division, 1, 0)
         layout_operation1.addWidget(button_product, 2, 0)
@@ -132,6 +135,7 @@ class Main(QDialog):  # 메인 클래스
             lambda state, num=".": self.number_button_clicked(num))
         layout_number.addWidget(button_dot, 3, 2)
         layout_number.addWidget(button_plusminus, 3, 0)
+
      # 각 레이아웃을 main_layout 레이아웃에 추가
         layout_left.addLayout(layout_clear_equal, 0, 0)
         layout_left.addLayout(layout_operation2, 1, 0)
