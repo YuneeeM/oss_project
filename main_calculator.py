@@ -92,8 +92,8 @@ class Main(QDialog):  # 메인 클래스
 
         # =, clear1~2, backspace 버튼 클릭 시 시그널 설정
         button_equal.clicked.connect(self.button_equal_clicked)
-        button_clear1.clicked.connect(self.button_clear1_clicked)
-        button_clear2.clicked.connect(self.button_clear2_clicked)
+        button_clear1.clicked.connect(self.button_clear_clicked)
+        button_clear2.clicked.connect(self.button_clear_clicked)
         button_backspace.clicked.connect(self.button_backspace_clicked)
 
         # 숫자 버튼 생성하고, layout_number 레이아웃에 추가
@@ -114,6 +114,7 @@ class Main(QDialog):  # 메인 클래스
         button_dot.clicked.connect(
             lambda state, num=".": self.number_button_clicked(num))
         layout_number.addWidget(button_dot, 3, 2)
+        layout_number.addWidget(button_plusminus, 3, 0)
 
         # 각 레이아웃을 main_layout 레이아웃에 추가
         layout_left.addLayout(layout_clear_equal, 0, 0)
