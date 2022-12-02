@@ -129,7 +129,7 @@ class Main(QDialog):
 
         temp_second_number = float(self.equation.text())
 
-        'isuue7'
+        'isuue7 기본 연산 구현'
         if self.temp_operator == "+":
             temp_result = self.temp_number+temp_second_number
 
