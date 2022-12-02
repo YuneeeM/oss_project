@@ -32,6 +32,7 @@ class Main(QDialog):  # 메인 클래스
         self.equation = QLineEdit("")
         layout_equation_solution.addWidget(self.equation)
 
+        'button'
         # 사칙연산 버튼 생성
         button_plus = QPushButton("+")
         button_minus = QPushButton("-")
