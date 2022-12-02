@@ -49,6 +49,12 @@ class Main(QDialog):  # 메인 클래스
         button_division.clicked.connect(
             lambda state, operation="/": self.button_operation_clicked(operation))
 
+        # 사칙연산 버튼을 layout_operation 레이아웃에 추가
+        layout_operation1.addWidget(button_plus)
+        layout_operation1.addWidget(button_minus)
+        layout_operation1.addWidget(button_product)
+        layout_operation1.addWidget(button_division)
+
         # =, clear, backspace 버튼 생성
         button_equal = QPushButton("=")
         button_clear = QPushButton("Clear")
@@ -73,11 +79,17 @@ class Main(QDialog):  # 메인 클래스
             number_button_dict[number] = QPushButton(str(number))
             number_button_dict[number].clicked.connect(lambda state, num=number:
                                                        self.number_button_clicked(num))
-            if number > 0:
-                x, y = divmod(number-1, 3)
-                layout_number.addWidget(number_button_dict[number], x, y)
-            elif number == 0:
-                layout_number.addWidget(number_button_dict[number], 3, 1)
+
+        layout_number.addWidget(number_button_dict[7], 0, 0)
+        layout_number.addWidget(number_button_dict[8], 0, 1)
+        layout_number.addWidget(number_button_dict[9], 0, 2)
+        layout_number.addWidget(number_button_dict[4], 1, 0)
+        layout_number.addWidget(number_button_dict[5], 1, 1)
+        layout_number.addWidget(number_button_dict[6], 1, 2)
+        layout_number.addWidget(number_button_dict[1], 2, 0)
+        layout_number.addWidget(number_button_dict[2], 2, 1)
+        layout_number.addWidget(number_button_dict[3], 2, 2)
+        layout_number.addWidget(number_button_dict[0], 3, 1)
 
         # 소숫점 버튼과 00 버튼을 입력하고 시그널 설정
         button_dot = QPushButton(".")
