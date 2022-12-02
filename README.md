@@ -1,6 +1,6 @@
 # 오픈소프트웨어 프로젝트 [GUI_Calculator]
 
-studyingrabbit에서 제공하는 소스코들 수정하고 기능을 개선하여 원도우 표준 계산기와 비슷한 계산기를 만든다!
+studyingrabbit에서 제공하는 소스코들 수정하고 기능을 개선하여 원도우 표준 계산기와 비슷한 계산기를 만든다
 
 ## Getting Started
 
