@@ -24,15 +24,13 @@ class Main(QDialog):
         layout_number = QGridLayout()
         layout_equation_solution = QFormLayout()
 
-        # 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
-        label_equation = QLabel("Equation: ")
-        label_solution = QLabel("Solution: ")
+        # 수식 입력과 답 출력을 위한 LineEdit 위젯 생성 -issue 5
         self.equation = QLineEdit("")
-        self.solution = QLineEdit("")
+        layout_equation_solution.addWidget(self.equation)
 
-        # layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
-        layout_equation_solution.addRow(label_equation, self.equation)
-        layout_equation_solution.addRow(label_solution, self.solution)
+        # 계산기능에 사용할 변수 -issue7
+        self.temp_number = 0
+        self.temp_operator = ""
 
         # 사칙연상 버튼 생성
         button_plus = QPushButton("+")
@@ -113,18 +111,46 @@ class Main(QDialog):
         self.equation.setText(equation)
 
     def button_operation_clicked(self, operation):
-        equation = self.equation.text()
-        equation += operation
-        self.equation.setText(equation)
+
+        if operation not in ["square", "root", "inverse", "plusminus"]:
+            if (self.temp_operator != ""):
+                self.temp_operator = ""
+                self.equation.setText("")
+                self.temp_operator = operation
+            else:
+                self.temp_number = float(self.equation.text())
+                self.equation.setText("")
+                self.temp_operator = operation
+        else:
+            self.temp_operator = ""
+            self.temp_number = 0
 
     def button_equal_clicked(self):
-        equation = self.equation.text()
-        solution = eval(equation)
-        self.solution.setText(str(solution))
+
+        temp_second_number = float(self.equation.text())
+
+        'isuue7'
+        if self.temp_operator == "+":
+            temp_result = self.temp_number+temp_second_number
+
+        elif self.temp_operator == "-":
+            temp_result = self.temp_number-temp_second_number
+
+        elif self.temp_operator == "*":
+            temp_result = self.temp_number * temp_second_number
+
+        elif self.temp_operator == "/":
+            if (temp_second_number != 0.0):
+                temp_result = self.temp_number / temp_second_number
+            else:
+                temp_result = 0
+
+        self.equation.setText(str(temp_result))
 
     def button_clear_clicked(self):
         self.equation.setText("")
-        self.solution.setText("")
+        self.temp_number = ""
+        self.temp_operator = ""
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
