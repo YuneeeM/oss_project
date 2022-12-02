@@ -11,6 +11,14 @@ from PyQt5.QtWidgets import *
              (역수나 c,c/e 등을 추가함)
 '''
 
+'''
+    issue3 계산기 기능 추가하기
+                issue 7 - 기존 계산 기능 개선
+                    (eval을 사용하지 않고 math나 numpy라이브러리 사용)
+                issue 8 - 신규 계산 기능 추가
+                    (%, 역수 등등)
+'''
+
 
 class Main(QDialog):  # 메인 클래스
     def __init__(self):
@@ -19,6 +27,7 @@ class Main(QDialog):  # 메인 클래스
 
     def init_ui(self):
         'layout'
+        # 각 위젯을 배치할 레이아웃을 미리 만들어 둠
         main_layout = QGridLayout()  # main_layout 전체를 통합하는 Gridlayout를 생성함
         layout_equation_solution = QGridLayout()  # 입력창
         layout_clear_equal = QGridLayout()  # 지우고 삭제하는 버튼의 Gridlayout
@@ -38,6 +47,11 @@ class Main(QDialog):  # 메인 클래스
             "border-width: 2px;"
             "border-color: gray;"
             "border-radius: 5px")
+
+        'temp'
+        # issue7 계산기능에 사용할 변수
+        self.temp_number = 0
+        self.temp_operator = ""
 
         'button'
         # 사칙연산 버튼 생성
@@ -82,7 +96,12 @@ class Main(QDialog):  # 메인 클래스
         layout_operation1.addWidget(button_equal, 5, 0)
 
         'click'
-        # 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
+        # =, clear1~2, backspace 버튼 클릭 시 시그널 설정
+        button_equal.clicked.connect(self.button_equal_clicked)
+        button_clear1.clicked.connect(self.button_clear1_clicked)
+        button_clear2.clicked.connect(self.button_clear2_clicked)
+        button_backspace.clicked.connect(self.button_backspace_clicked)
+
         # 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
         button_plus.clicked.connect(
             lambda state, operation="+": self.button_operation_clicked(operation))
@@ -92,6 +111,7 @@ class Main(QDialog):  # 메인 클래스
             lambda state, operation="*": self.button_operation_clicked(operation))
         button_division.clicked.connect(
             lambda state, operation="/": self.button_operation_clicked(operation))
+        # issue8 -새기능 추가
         button_remainder.clicked.connect(
             lambda state, operation="%": self.button_operation_clicked(operation))
         button_reciprocal.clicked.connect(
@@ -102,13 +122,6 @@ class Main(QDialog):  # 메인 클래스
             lambda state, operation="root": self.button_operation_clicked(operation))
         button_plusminus.clicked.connect(
             lambda state, operation="plusminus": self.button_operation_clicked(operation))
-
-        layout_operation1.addWidget(button_backspace, 0, 0)
-        layout_operation1.addWidget(button_division, 1, 0)
-        layout_operation1.addWidget(button_product, 2, 0)
-        layout_operation1.addWidget(button_minus, 3, 0)
-        layout_operation1.addWidget(button_plus, 4, 0)
-        layout_operation1.addWidget(button_equal, 5, 0)
 
         # 숫자 버튼 생성하고, layout_number 레이아웃에 추가
         # 각 숫자 버튼을 클릭했을 때, 숫자가 수식창에 입력 될 수 있도록 시그널 설정
@@ -136,7 +149,7 @@ class Main(QDialog):  # 메인 클래스
         layout_number.addWidget(button_dot, 3, 2)
         layout_number.addWidget(button_plusminus, 3, 0)
 
-     # 각 레이아웃을 main_layout 레이아웃에 추가
+        # 각 레이아웃을 main_layout 레이아웃에 추가
         layout_left.addLayout(layout_clear_equal, 0, 0)
         layout_left.addLayout(layout_operation2, 1, 0)
         layout_left.addLayout(layout_number, 2, 0)
@@ -154,34 +167,93 @@ class Main(QDialog):  # 메인 클래스
 ### functions ###
 #################
 
+    def number_button_clicked(self, num):
+        equation = self.equation.text()
+        equation += str(num)
+        self.equation.setText(equation)
 
-def number_button_clicked(self, num):
-    equation = self.equation.text()
-    equation += str(num)
-    self.equation.setText(equation)
+    def button_operation_clicked(self, operation):
 
+        if operation not in ["square", "root", "inverse", "plusminus"]:
+            if (self.temp_operator != ""):
+                self.temp_operator = ""
+                self.equation.setText("")
+                self.temp_operator = operation
+            else:
+                self.temp_number = float(self.equation.text())
+                self.equation.setText("")
+                self.temp_operator = operation
 
-def button_operation_clicked(self, operation):
-    equation = self.equation.text()
-    equation += operation
-    self.equation.setText(equation)
+        # issue 8 새로운 기능 구현
+        else:
+            if operation == "square":
+                self.temp_number = float(self.equation.text())
+                self.temp_number = self.temp_number**2
+                self.equation.setText(str(self.temp_number))
+                pass
+            elif operation == "root":
+                self.temp_number = float(self.equation.text())
+                self.temp_number = self.temp_number**(1/2)
+                self.equation.setText(str(self.temp_number))
+                pass
+            elif operation == "inverse":
+                self.temp_number = float(self.equation.text())
+                self.temp_number = 1/self.temp_number
+                self.equation.setText(str(self.temp_number))
+                pass
+            elif operation == "plusminus":
+                self.temp_number = float(self.equation.text())
+                self.temp_number = (-1)*self.temp_number
+                self.equation.setText(str(self.temp_number))
+                pass
+            self.temp_operator = ""
+            self.temp_number = 0
 
+    def button_equal_clicked(self):
 
-def button_equal_clicked(self):
-    equation = self.equation.text()
-    solution = eval(equation)
-    self.solution.setText(str(solution))
+        temp_second_number = float(self.equation.text())
 
+        # isuue7 기본 연산 구현
+        if self.temp_operator == "+":
+            temp_result = self.temp_number+temp_second_number
 
-def button_clear_clicked(self):
-    self.equation.setText("")
-    self.solution.setText("")
+        elif self.temp_operator == "-":
+            temp_result = self.temp_number-temp_second_number
 
+        elif self.temp_operator == "*":
+            temp_result = self.temp_number * temp_second_number
 
-def button_backspace_clicked(self):
-    equation = self.equation.text()
-    equation = equation[:-1]
-    self.equation.setText(equation)
+        elif self.temp_operator == "/":
+            if (temp_second_number != 0.0):
+                temp_result = self.temp_number / temp_second_number
+            else:
+                temp_result = 0
+
+        # issue 8 % 기능 구현
+        elif self.temp_operator == "%":
+            if (temp_second_number != 0.0):
+                temp_result = self.temp_number % temp_second_number
+            else:
+                temp_result = 0
+                self.temp_number = 0
+
+        self.equation.setText(str(temp_result))
+
+    # issue8 c와 ce 기능 구현
+    def button_clear1_clicked(self):
+        self.equation.setText(" ")
+        self.temp_number = ""
+        self.temp_operator = ""
+
+    def button_clear2_clicked(self):
+        self.equation.setText(" ")
+        self.temp_number = ""
+        self.temp_operator = ""
+
+    def button_backspace_clicked(self):
+        equation = self.equation.text()
+        equation = equation[:-1]
+        self.equation.setText(equation)
 
 
 if __name__ == '__main__':
